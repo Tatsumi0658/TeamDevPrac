@@ -30,17 +30,22 @@ class TeamsController < ApplicationController
   end
 
   def update
-    if @team.update(team_params)
+    if @team.owner_id == current_user.id
+      @team.update(team_params)
       redirect_to @team, notice: 'チーム更新に成功しました！'
     else
-      flash.now[:error] = '保存に失敗しました、、'
       render :edit
+      flash.now[:error] = '保存に失敗しました、、'
     end
   end
 
   def destroy
-    @team.destroy
-    redirect_to teams_url, notice: 'チーム削除に成功しました！'
+    if @team.owner_id == current_user.id
+      @team.destroy
+      redirect_to teams_url, notice: 'チーム削除に成功しました！'
+    else
+      redirect_to teams_url, notcie: '権限がありません'
+    end
   end
 
   def dashboard
