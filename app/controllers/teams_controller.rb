@@ -32,7 +32,7 @@ class TeamsController < ApplicationController
   def update
     if @team.owner_id == current_user.id
       @team.update(team_params)
-      redirect_to @team, notice: 'チーム更新に成功しました！'
+      redirect_to @team, notice: 'チーム更新に成功しました!'
     else
       render :edit
       flash.now[:error] = '保存に失敗しました、、'
@@ -50,6 +50,16 @@ class TeamsController < ApplicationController
 
   def dashboard
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
+  end
+
+  def change
+    @team = Team.friendly.find(params[:id])
+    @team.owner_id = params[:owner_id]
+    if @team.save
+      redirect_to team_url(params[:id])
+    else
+      redirect_to team_url(params[:id])
+    end
   end
 
   private
