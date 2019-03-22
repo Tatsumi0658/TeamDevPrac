@@ -22,8 +22,12 @@ class AgendasController < ApplicationController
   end
 
   def destroy
-    @agenda.destroy
-    redirect_to dashboard_url, notice: 'アジェンダを削除しました'
+    if @agenda.user_id == current_user.id
+      @agenda.destroy
+      redirect_to dashboard_url, notice: 'アジェンダを削除しました'
+    else
+      redirect_to dashboard_url, notice: '削除権限がありません'
+    end
   end
 
   private
