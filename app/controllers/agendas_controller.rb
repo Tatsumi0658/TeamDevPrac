@@ -17,7 +17,7 @@ class AgendasController < ApplicationController
     if current_user.save && @agenda.save
       redirect_to dashboard_url, notice: 'アジェンダ作成に成功しました！'
     else
-      render :new
+      redirect_to dashboard_url, notice: 'アジェンダ作成に失敗しました。アジェンダは1文字〜30文字で作成してください'
     end
   end
 

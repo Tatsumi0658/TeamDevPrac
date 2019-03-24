@@ -30,7 +30,7 @@ class ArticlesController < ApplicationController
     @article.user = current_user
     @article.team_id = @agenda.team_id
     if @article.save
-      redirect_to article_url(article), notice: '記事作成に成功しました！'
+      redirect_to article_url(@article), notice: '記事作成に成功しました！'
     else
       render :new
     end
