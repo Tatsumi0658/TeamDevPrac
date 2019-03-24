@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy change]
+  before_action :set_team, only: %i[show edit update destroy]
 
   def index
     @teams = Team.all
@@ -24,7 +24,6 @@ class TeamsController < ApplicationController
       @team.invite_member(@team.owner)
       redirect_to @team, notice: 'チーム作成に成功しました！'
     else
-      flash.now[:error] = '保存に失敗しました、、'
       render :new
     end
   end

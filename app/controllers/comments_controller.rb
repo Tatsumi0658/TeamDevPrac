@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
   def create
     @article = Article.find(params[:article_id])
-    @comment = @article.comments.build(comment_params)
+    @comment = @article.comments.create(comment_params)
     @comment.user_id = current_user.id
     respond_to do |format|
       if @comment.save!
