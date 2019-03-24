@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy]
+  before_action :set_team, only: %i[show edit update destroy change]
 
   def index
     @teams = Team.all
@@ -30,15 +30,19 @@ class TeamsController < ApplicationController
   end
 
   def update
-    if @team.owner_id == current_user.id 
-      if @team.update(team_params)
+    owner = @team.owner_id
+    if @team.owner_id == current_user.id
+      if @team.update(owner_id: params[:team][:owner_id]) && owner != @team.owner_id
+        @user = User.find(@team.owner_id)
+        LeaderMailer.leader_mail(@user).deliver
+        redirect_to @team, notice: 'リーダー権限を変更しました'
+      elsif @team.update(team_params)
         redirect_to @team, notice: 'チーム更新に成功しました!'
       else
         render :edit
-        flash.now[:error] = '保存に失敗しました、、'
       end
     else
-      render :edit
+      redirect_to dashboard_url
     end
   end
 
@@ -55,18 +59,6 @@ class TeamsController < ApplicationController
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
   end
 
-  def change
-    @team = Team.friendly.find(params[:id])
-    @team.owner_id = params[:owner_id]
-    if @team.save
-      @user = User.find(params[:owner_id])
-      #LeaderMailer.send_message_to_user(@user).deliver
-      LeaderMailer.leader_mail(@user).deliver
-      redirect_to team_url(params[:id])
-    else
-      redirect_to team_url(params[:id])
-    end
-  end
 
   private
 
@@ -77,4 +69,5 @@ class TeamsController < ApplicationController
   def team_params
     params.fetch(:team, {}).permit %i[name icon icon_cache owner_id keep_team_id]
   end
+
 end
