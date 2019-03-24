@@ -30,12 +30,15 @@ class TeamsController < ApplicationController
   end
 
   def update
-    if @team.owner_id == current_user.id
-      @team.update(team_params)
-      redirect_to @team, notice: 'チーム更新に成功しました!'
+    if @team.owner_id == current_user.id 
+      if @team.update(team_params)
+        redirect_to @team, notice: 'チーム更新に成功しました!'
+      else
+        render :edit
+        flash.now[:error] = '保存に失敗しました、、'
+      end
     else
       render :edit
-      flash.now[:error] = '保存に失敗しました、、'
     end
   end
 
