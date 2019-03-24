@@ -11,7 +11,7 @@
           <tbody>
             <% @team.articles.each do |article| %>
               <tr>
-                <td><%= image_tag default_img(nil), size: '40x40' %></td>
+                <td><%= image_tag default_img(article.image.url), size: '40x40' %></td>
                 <td>
                   <%= link_to article_path(article) do %>
                     <span><%= article.team.name %>チーム　</span>
@@ -42,7 +42,7 @@
           <tbody>
             <% @team.members.each do |member| %>
               <tr>
-                <td><%= image_tag default_img(nil), size: '40x40' %></td>
+                <td><%= image_tag default_img(member.icon.url), size: '40x40' %></td>
                 <td><%= member.email %></td>
               </tr>
             <% end %>
