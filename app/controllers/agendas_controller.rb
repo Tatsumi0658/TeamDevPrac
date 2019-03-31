@@ -22,8 +22,8 @@ class AgendasController < ApplicationController
   end
 
   def destroy
-    if @agenda.user_id == current_user.id || @agenda.team.owner_id == current_user.id
-      team_id = Agenda.find(params[:id]).team_id
+    if ( @agenda.user_id == current_user.id || @agenda.team.owner_id == current_user.id )
+      team_id = @agenda.team_id
       @users = Assign.where(team_id: team_id).all
       @users.each do |user|
         AgendaDeleteMailer.agenda_delete_mail(user).deliver
@@ -38,7 +38,11 @@ class AgendasController < ApplicationController
   private
 
   def set_agenda
-    @agenda = Agenda.find(params[:id])
+    if Agenda.find_by(id: params[:id])
+      @agenda = Agenda.find(params[:id])
+    else
+      redirect_to dashboard_url, notice: "見つかりませんでした"
+    end
   end
 
   def agenda_params

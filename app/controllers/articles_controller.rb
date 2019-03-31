@@ -15,9 +15,12 @@ class ArticlesController < ApplicationController
   end
 
   def new
-    @agenda = Agenda.find(params[:agenda_id])
-    @team = @agenda.team
-    @article = @agenda.articles.build
+    if @agenda = Agenda.find_by(id: params[:agenda_id])
+      @team = @agenda.team
+      @article = @agenda.articles.build
+    else
+      redirect_to dashboard_url, notice: "該当のアジェンダがありません"
+    end
   end
 
   def edit
@@ -25,12 +28,15 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    @agenda = Agenda.find(params[:agenda_id])
-    @article = @agenda.articles.build(article_params)
-    @article.user = current_user
-    @article.team_id = @agenda.team_id
-    if @article.save
-      redirect_to article_url(@article), notice: '記事作成に成功しました！'
+    if @agenda = Agenda.find_by(id: params[:agenda_id])
+      @article = @agenda.articles.build(article_params)
+      @article.user = current_user
+      @article.team_id = @agenda.team_id
+      if @article.save
+        redirect_to article_url(@article), notice: '記事作成に成功しました！'
+      else
+        render :new
+      end
     else
       render :new
     end
@@ -52,7 +58,11 @@ class ArticlesController < ApplicationController
   private
 
   def set_article
-    @article = Article.find(params[:id])
+    if Article.find_by(id: params[:id])
+      @article = Article.find(params[:id])
+    else
+      redirect_to dashboard_url, notice:"該当の記事はありません"
+    end
   end
 
   def article_params
