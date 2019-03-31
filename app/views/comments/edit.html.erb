@@ -2,7 +2,7 @@
 <br><br><br>
 <%= form_with(model: @comment, local: true) do |form| %>
   <% if @comment.errors.any? %>
-    <div id="error_explanation">
+    <div class="alert alert-danger alert-dismissible">
       <% @comment.errors.full_messages.each do |message| %>
         <%= message %>
       <% end %>
