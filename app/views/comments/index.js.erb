@@ -1,2 +1,3 @@
-$("#comments_area").html("<%= j(render 'comments/index', { comments: @comment.article.comments, article: @comment.article }) %>")
-$("textarea").val('')
+$("#comments_area").html("<%= j(render 'comments/index', { comments: @comment.article.comments, article: @comment.article }) %>");
+$("textarea").val(''); //コメントエリアの初期化
+$("#notice").html("<p>成功しました</p>");

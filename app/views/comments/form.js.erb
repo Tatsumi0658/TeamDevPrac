@@ -1,0 +1,2 @@
+$("#notice").html("<%= j(render 'comments/error',{ comments: @comment.article.comments, article: @comment.article }) %>")
+$("textarea").val('') //コメントエリアの初期化
