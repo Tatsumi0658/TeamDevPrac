@@ -32,7 +32,7 @@ class ArticlesController < ApplicationController
       @article = @agenda.articles.build(article_params)
       @article.user = current_user
       @article.team_id = @agenda.team_id
-      if @article.save
+      if Assign.where(user_id: current_user.id).where(team_id: @agenda.team_id).present? && @article.save
         redirect_to article_url(@article), notice: '記事作成に成功しました！'
       else
         render :new
@@ -43,16 +43,24 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    if @article.update(article_params)
-      redirect_to @article, notice: '記事更新に成功しました！'
+    if Assign.where(user_id: current_user.id).where(team_id: @article.agenda.team_id).present?
+      if @article.update(article_params)
+        redirect_to @article, notice: '記事更新に成功しました！'
+      else
+        render :edit
+      end
     else
-      render :edit
+      redirect_to dashboard_url, notice: "権限がありません"
     end
   end
 
   def destroy
-    @article.destroy
-    redirect_to dashboard_url
+    if Assign.where(user_id: current_user.id).where(team_id: @article.agenda.team_id).present?
+      @article.destroy
+      redirect_to dashboard_url
+    else
+      redirect_to dashboard_url, notice:"権限がありません"
+    end
   end
 
   private
