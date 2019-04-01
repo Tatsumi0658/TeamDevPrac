@@ -13,24 +13,26 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    @comment = Comment.find_by(id: params[:id])
+    unless @comment = Comment.find_by(id: params[:id])
+      redirect_to dashboard_url, notice: "権限がありません"
+    end
   end
 
   def update
     if @comment = Comment.find_by(id: params[:id])
       @article = @comment.article
-      if @comment.update(comment_params)
+      if @comment.user_id == current_user.id && @comment.update(comment_params)
         redirect_to article_path(@article), notice:"更新しました"
       else
-        render :edit
+        render :edit, notice: "更新できませんでした"
       end
     else
-      render :edit
+      render :edit, notice: "該当のコメントがありません"
     end
   end
 
   def destroy
-    @comment = Comment.find_by(id: params[:id])
+    @comment = Comment.find(params[:id])
     if @comment.destroy
       respond_to do |format|
         format.js { render :index }

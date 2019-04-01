@@ -7,15 +7,23 @@ class TeamsController < ApplicationController
   end
 
   def show
-    @working_team = @team
-    change_keep_team(current_user, @team)
+    if Assign.where(user_id: current_user.id).where(team_id: @team.id).present?
+      @working_team = @team
+      change_keep_team(current_user, @team)
+    else
+      redirect_to dashboard_url, notice: "権限がありません"
+    end
   end
 
   def new
     @team = Team.new
   end
 
-  def edit; end
+  def edit
+    unless Assign.where(user_id: current_user.id).where(team_id: @team.id).present?
+      redirect_to dashboard_url, notice: "権限がありません"
+    end
+  end
 
   def create
     @team = Team.new(team_params)
@@ -41,7 +49,7 @@ class TeamsController < ApplicationController
         render :edit
       end
     else
-      redirect_to dashboard_url
+      redirect_to dashboard_url, notice: "権限がありません "
     end
   end
 

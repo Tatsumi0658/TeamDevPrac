@@ -38,7 +38,7 @@ class ArticlesController < ApplicationController
         render :new
       end
     else
-      render :new
+      redirect_to dashboard_url, notice: "該当の記事がありません"
     end
   end
 
