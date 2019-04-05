@@ -15,12 +15,9 @@ class ArticlesController < ApplicationController
   end
 
   def new
-    if @agenda = Agenda.find_by(id: params[:agenda_id])
-      @team = @agenda.team
-      @article = @agenda.articles.build
-    else
-      redirect_to dashboard_url, notice: "該当のアジェンダがありません"
-    end
+    @agenda = Agenda.find(params[:agenda_id])
+    @team = @agenda.team
+    @article = @agenda.articles.build
   end
 
   def edit
@@ -28,17 +25,14 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    if @agenda = Agenda.find_by(id: params[:agenda_id])
-      @article = @agenda.articles.build(article_params)
-      @article.user = current_user
-      @article.team_id = @agenda.team_id
-      if Assign.where(user_id: current_user.id).where(team_id: @agenda.team_id).present? && @article.save
-        redirect_to article_url(@article), notice: '記事作成に成功しました！'
-      else
-        render :new
-      end
+    @agenda = Agenda.find(params[:agenda_id])
+    @article = @agenda.articles.build(article_params)
+    @article.user = current_user
+    @article.team_id = @agenda.team_id
+    if Assign.where(user_id: current_user.id).where(team_id: @agenda.team_id).present? && @article.save
+      redirect_to article_url(@article), notice: '記事作成に成功しました！'
     else
-      redirect_to dashboard_url, notice: "該当の記事がありません"
+      render :new
     end
   end
 
@@ -66,11 +60,7 @@ class ArticlesController < ApplicationController
   private
 
   def set_article
-    if Article.find_by(id: params[:id])
-      @article = Article.find(params[:id])
-    else
-      redirect_to dashboard_url, notice:"該当の記事はありません"
-    end
+    @article = Article.find(params[:id])
   end
 
   def article_params
