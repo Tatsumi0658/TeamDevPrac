@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   def create
-    @article = Article.find_by(id: params[:article_id])
+    @article = Article.find(params[:article_id])
     @comment = @article.comments.build(comment_params)
     @comment.user_id = current_user.id
     respond_to do |format|
@@ -13,21 +13,16 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    unless @comment = Comment.find_by(id: params[:id])
-      redirect_to dashboard_url, notice: "権限がありません"
-    end
+    @comment = Comment.find(params[:id])
   end
 
   def update
-    if @comment = Comment.find_by(id: params[:id])
-      @article = @comment.article
-      if @comment.user_id == current_user.id && @comment.update(comment_params)
-        redirect_to article_path(@article), notice:"更新しました"
-      else
-        render :edit, notice: "更新できませんでした"
-      end
+    @comment = Comment.find(params[:id])
+    @article = @comment.article
+    if @comment.user_id == current_user.id && @comment.update(comment_params)
+      redirect_to article_path(@article), notice:"更新しました"
     else
-      render :edit, notice: "該当のコメントがありません"
+      render :edit, notice: "更新できませんでした"
     end
   end
 
