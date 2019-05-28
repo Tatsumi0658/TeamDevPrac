@@ -2,7 +2,7 @@ class Team < ApplicationRecord
   include FriendlyId
   friendly_id :name
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length:{ minimum:1, maximum:30 }
 
   belongs_to :owner, class_name: 'User', foreign_key: :owner_id
   has_many :assigns, dependent: :destroy

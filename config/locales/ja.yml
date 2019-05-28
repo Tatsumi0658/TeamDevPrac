@@ -203,3 +203,8 @@ ja:
       long: "%Y/%m/%d %H:%M"
       short: "%m/%d %H:%M"
     pm: 午後
+  attributes:
+    icon: 画像
+    title: タイトル
+    content: 内容
+    name: 名前

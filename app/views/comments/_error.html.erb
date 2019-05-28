@@ -1,0 +1,7 @@
+<% if @comment.errors.any? %>
+  <div class="alert alert-danger alert-dismissible">
+      <% @comment.errors.full_messages.each do |message| %>
+        <%= message %>
+      <% end %>
+  </div>
+<% end %>

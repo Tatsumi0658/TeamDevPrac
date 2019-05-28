@@ -1,13 +1,13 @@
-<%= form_with(model: team, local: true) do |form| %>
-  <% if team.errors.any? %>
+<%= form_with(model: @team, local: true) do |form| %>
+  <% if @team.errors.any? %>
     <div class="alert alert-danger alert-dismissible">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <h5>
         <i class="icon fa fa-ban"></i>
-        <%= pluralize(team.errors.count, "error") %> prohibited this team from being saved:
+        <%= pluralize(@team.errors.count, "error") %> prohibited this team from being saved:
       </h5>
       <ul>
-        <% team.errors.full_messages.each do |message| %>
+        <% @team.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
